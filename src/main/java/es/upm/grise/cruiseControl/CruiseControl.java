@@ -96,6 +96,30 @@ public class CruiseControl {
 		speedSet = null;
 		
 	}
+
+	public Response nextCommand() {
+    int currentSpeed = speedometer.getCurrentSpeed();
+    int roadMinSpeed = roadInformation.getMinSpeed();
+    int roadMaxSpeed = roadInformation.getMaxSpeed();
+
+    if (!enabled || speedSet == null) {
+        return new Response(Command.DISABLE);
+    }
+
+    if (currentSpeed > speedSet) {
+        return new Response(Command.REDUCE);
+    }
+
+    if (currentSpeed < speedSet) {
+        if (currentSpeed < roadMinSpeed) {
+            return new Response(Command.INCREASE);
+        }
+        return new Response(Command.INCREASE);
+    }
+
+    return new Response(Command.KEEP);
+	}
+
 	
 	/* 
 	 * Others getters and setters
